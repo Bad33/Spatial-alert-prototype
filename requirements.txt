@@ -1,0 +1,12 @@
+pandas>=2.2
+numpy>=1.26
+geopandas>=0.14
+scikit-learn>=1.4
+pyproj>=3.6        # for GeoPandas CRS ops
+shapely>=2.0
+Flask>=3.0
+flask_cors>=4.0
+scikit-learn>=1.4
+geojson>=3.1
+xgboost>=2.0
+joblib>=1.4

@@ -71,7 +71,27 @@ def create_app():
             lon=alerts_df["longitude"].tolist(),
             density=np.exp(log_dens).tolist()
         ))
+    
+    from ml_services import predict
 
+    @app.route("/predict", methods=["POST"])
+    def predict_severity():
+        rec = request.get_json()
+        if not rec:
+            return {"error": "JSON body required"}, 400
+        return jsonify(dict(
+            predicted_severity=predict.classify(rec),
+            risk_score=predict.risk_score(rec)
+        ))
+
+    @app.route("/anomaly", methods=["POST"])
+    def predict_anomaly():
+        rec = request.get_json()
+        if not rec:
+            return {"error": "JSON body required"}, 400
+        return jsonify(dict(
+            is_anomaly=predict.is_anomaly(rec)
+        ))
 
 
     return app

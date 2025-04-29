@@ -1,0 +1,6 @@
+pandas>=2.2
+numpy>=1.26
+geopandas>=0.14
+scikit-learn>=1.4
+pyproj>=3.6        # for GeoPandas CRS ops
+shapely>=2.0

@@ -48,5 +48,30 @@ def create_app():
                 lon_bins=yedges.tolist(),
             )
         )
+    
+    from ml_services.clustering import run_dbscan
+
+    @app.route("/clusters")
+    def clusters():
+        eps = float(request.args.get("eps_km", 2.0))
+        min_samples = int(request.args.get("min_samples", 10))
+        labels, features = run_dbscan(alerts_df, eps, min_samples)
+        return jsonify(features)
+    
+    from sklearn.neighbors import KernelDensity
+
+    @app.route("/kde")
+    def kde():
+        bw = float(request.args.get("bw_km", 1.0))
+        coords = alerts_df[["latitude", "longitude"]].to_numpy()
+        kde = KernelDensity(bandwidth=bw/111, metric="haversine").fit(np.radians(coords))
+        log_dens = kde.score_samples(np.radians(coords))
+        return jsonify(dict(
+            lat=alerts_df["latitude"].tolist(),
+            lon=alerts_df["longitude"].tolist(),
+            density=np.exp(log_dens).tolist()
+        ))
+
+
 
     return app
